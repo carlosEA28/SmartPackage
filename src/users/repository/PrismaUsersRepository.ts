@@ -1,14 +1,16 @@
-import { PrismaClient } from 'generated/prisma/client';
+import { User } from 'generated/prisma/client';
 import { CreateUserDto } from '../dto/createUserDto';
 import { UpdateUserDto } from '../dto/UpdateUserDto';
-import { UsersRepostiory } from './interfaces/users.interfaces';
+import { UsersRepository } from './interfaces/UsersRepository';
 import { PrismaService } from 'src/database/prisma.service';
+import { Injectable } from '@nestjs/common';
 
-export class PrismaUsersRepository implements UsersRepostiory {
+@Injectable()
+export class PrismaUsersRepository implements UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findById(id: string): Promise<unknown | null> {
-    const user = await this.prisma.user.findFirst({
+  async findById(id: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
       where: {
         id,
       },
@@ -16,8 +18,8 @@ export class PrismaUsersRepository implements UsersRepostiory {
 
     return user;
   }
-  async findByEmail(email: string) {
-    const user = await this.prisma.user.findFirst({
+  async findByEmail(email: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
       where: {
         email,
       },
@@ -25,7 +27,7 @@ export class PrismaUsersRepository implements UsersRepostiory {
 
     return user;
   }
-  async createUser(params: CreateUserDto) {
+  async create(params: CreateUserDto): Promise<User> {
     const user = await this.prisma.user.create({
       data: {
         ...params,
@@ -34,7 +36,16 @@ export class PrismaUsersRepository implements UsersRepostiory {
 
     return user;
   }
-  async updateUser(id: string, data: UpdateUserDto) {
-    throw new Error('Method not implemented.');
+  async update(id: string, data: UpdateUserDto): Promise<User> {
+    const user = await this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        ...data,
+      },
+    });
+
+    return user;
   }
 }
