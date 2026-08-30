@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  ADMIN
+  DOORMAN
+  RESIDENT
+}
+
+enum ResidentType {
+  MAIN
+  DEPENDENT
+}
+
+enum PackageStatus {
+  AVAILABLE
+  WITHDRAWN
+}
+
+enum NotificationType {
+  PACKAGE_WITHDRAWN
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  receivedPackages Package[] @relation("PackageReceivedBy")
+
+  residents Resident[]
+}
+
+model Apartment {
+  id        String   @id @default(cuid())
+  number    String
+  block     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  residents Resident[]
+  packages  Package[]
+
+  @@unique([block, number])
+}
+
+model Resident {
+  id          String       @id @default(cuid())
+  name        String
+  type        ResidentType @default(MAIN)
+  apartmentId String
+  userId      String?      @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  apartment Apartment @relation(fields: [apartmentId], references: [id])
+  user      User?     @relation(fields: [userId], references: [id])
+  photos    ResidentPhoto[]
+
+  withdrawnPackages Package[] @relation("PackageWithdrawnBy")
+}
+
+model ResidentPhoto {
+  id         String   @id @default(cuid())
+  residentId String
+  photoUrl   String
+  createdAt  DateTime @default(now())
+
+  resident Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
+}
+
+model Package {
+  id                   String        @id @default(cuid())
+  description          String
+  trackingCode         String?       @unique
+  status               PackageStatus @default(AVAILABLE)
+  apartmentId          String
+  receivedAt           DateTime
+  receivedByUserId     String
+  withdrawnAt          DateTime?
+  withdrawnByResidentId String?
+  withdrawalPhotoUrl   String?
+  similarityScore      Float?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  apartment           Apartment @relation(fields: [apartmentId], references: [id])
+  receivedByUser      User      @relation("PackageReceivedBy", fields: [receivedByUserId], references: [id])
+  withdrawnByResident Resident? @relation("PackageWithdrawnBy", fields: [withdrawnByResidentId], references: [id])
+
+  notifications Notification[]
+}
+
+model Notification {
+  id             String             @id @default(cuid())
+  packageId      String
+  recipientEmail String
+  type           NotificationType
+  status         NotificationStatus @default(PENDING)
+  subject        String
+  sentAt         DateTime?
+  createdAt      DateTime           @default(now())
+
+  package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+}

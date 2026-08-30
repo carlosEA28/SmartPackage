@@ -12,12 +12,14 @@ Role:
 ADMIN
 DOORMAN
 RESIDENT
+
 Apartments
 id
 number
 block
 createdAt
 updatedAt
+
 Residents
 
 Profile:
