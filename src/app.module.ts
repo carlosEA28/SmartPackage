@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { DatabaseModule } from './database/database.module';
-import { UsersModule } from './users/users.module';
-import { ApartmentsModule } from './apartments/apartments.module';
-import { ResidentsModule } from './residents/residents.module';
-import { PackagesModule } from './packages/packages.module';
-import { NotificationsModule } from './notifications/notifications.module';
+import { UsersModule } from './modules/users/users.module';
+import { ApartmentsModule } from './modules/apartments/apartments.module';
+import { ResidentsModule } from './modules/residents/residents.module';
+import { PackagesModule } from './modules/packages/packages.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
   imports: [
