@@ -91,7 +91,7 @@ model Package {
   trackingCode         String?       @unique
   status               PackageStatus @default(AVAILABLE)
   apartmentId          String
-  receivedAt           DateTime
+  receivedAt           DateTime @default(now())
   receivedByUserId     String
   withdrawnAt          DateTime?
   withdrawnByResidentId String?

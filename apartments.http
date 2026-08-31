@@ -1,0 +1,22 @@
+### Create Apartment
+POST http://localhost:3000/apartments
+Content-Type: application/json
+
+{
+  "number": "101",
+  "block": "A"
+}
+
+### Get Apartment by id
+GET http://localhost:3000/apartments/{{apartment_id}}
+
+### List Residents of an Apartment
+GET http://localhost:3000/apartments/{{apartment_id}}/residents
+
+### Update Apartment
+PATCH http://localhost:3000/apartments/{{apartment_id}}
+Content-Type: application/json
+
+{
+  "number": "102"
+}

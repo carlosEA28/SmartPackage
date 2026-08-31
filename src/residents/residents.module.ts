@@ -15,5 +15,6 @@ import { ResidentsService } from './services/residents.service';
       useClass: PrismaResidentsRepository,
     },
   ],
+  exports: [ResidentsService],
 })
 export class ResidentsModule {}

@@ -1,0 +1,33 @@
+### Criar Residente (Morador)
+POST http://localhost:3000/residents
+Content-Type: application/json
+
+{
+  "name": "João da Silva",
+  "apartmentId": "cmth7irfd00016rj2pt90zzvk"
+}
+
+### Buscar Residente por ID
+GET http://localhost:3000/residents/cmth7j73700026rj271awp2rd
+
+### Listar Moradores de um Apartamento
+GET http://localhost:3000/residents/apartment/cmth7irfd00016rj2pt90zzvk
+
+### Atualizar Residente
+PATCH http://localhost:3000/residents/cmth7j73700026rj271awp2rd
+Content-Type: application/json
+
+{
+  "name": "João da Silva Filho"
+}
+
+### Adicionar foto ao Residente
+POST http://localhost:3000/residents/cmth7j73700026rj271awp2rd/photo
+Content-Type: application/json
+
+{
+  "photoUrl": "https://exemplo.com/foto-joao.jpg"
+}
+
+### Buscar fotos do Residente
+GET http://localhost:3000/residents/cmth7j73700026rj271awp2rd/photos
